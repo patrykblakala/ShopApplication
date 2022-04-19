@@ -58,12 +58,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Double getTotalOrderPrice() {
-        var totalPrice = 0.0;
-        List<Product> productsInBasket = basketService.getProductsInBasket();
-        for (Product product : productsInBasket) {
-            totalPrice += product.getPrice();
-        }
-        return totalPrice;
+        return basketService.getProductsInBasket().stream()
+                .map(Product::getPrice)
+                .reduce(0.0, Double::sum);
     }
 
     @Override

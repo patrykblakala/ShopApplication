@@ -31,9 +31,10 @@ public class BasketServiceImpl implements BasketService {
         basketOptional.ifPresentOrElse(basket -> {
 
             Product product = basket.getProduct();
-            if (product.getQuantity() >= basket.getQuantity() + quantity) {
-                basket.setQuantity(basket.getQuantity() + quantity);
-            } else throw new QuantityExceededException("there is not enough quantity for product: " + product.getId() );
+            if (product.getQuantity() < basket.getQuantity() + quantity) {
+                throw new QuantityExceededException("there is not enough quantity for product: " + product.getId());
+            }
+            basket.setQuantity(basket.getQuantity() + quantity);
             basketRepository.save(basket);
         }, () -> {
             Product productDb = productService.getById(productId);

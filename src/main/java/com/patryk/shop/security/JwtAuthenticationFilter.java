@@ -49,3 +49,4 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .writeValue(response.getWriter(), responseBody);
     }
 }
+
