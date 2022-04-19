@@ -2,7 +2,6 @@ package com.patryk.shop.config;
 
 import com.patryk.shop.security.JwtAuthenticationFilter;
 import com.patryk.shop.security.MultipleAuthorizationFilter;
-import com.patryk.shop.service.impl.LoginServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .cors()
                 .and()
-                .addFilter(new LoginServiceImpl(authenticationManager()))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new MultipleAuthorizationFilter(authenticationManager()))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
