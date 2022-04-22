@@ -11,6 +11,7 @@ import org.springframework.data.history.RevisionMetadata;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
@@ -30,4 +31,5 @@ public class UserDto extends AuditableDto{
     private String confirmPassword;
     private Integer revisionNumber;
     private RevisionMetadata.RevisionType operationType;
+    private Set<String> roles;
 }

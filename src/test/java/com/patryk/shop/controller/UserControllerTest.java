@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.yml")
 @ActiveProfiles("test")
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,16 +66,15 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users/" + user.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()))
-                .andExpect(jsonPath("$.password").value(user.getPassword()))
+                .andExpect(jsonPath("$.password").doesNotExist())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$.roles").value(user.getRoles()))
+                .andExpect(jsonPath("$.roles", containsInAnyOrder("ADMIN")))
                 .andExpect(jsonPath("$.confirmPassword").doesNotExist())
                 .andExpect(jsonPath("$.revisionNumber").doesNotExist())
                 .andExpect(jsonPath("$.operationType").doesNotExist());
     }
 
     @Test
-    @Transactional
     @WithMockUser(username = "password")
     void shouldSaveUser() throws Exception {
 
@@ -88,8 +88,6 @@ public class UserControllerTest {
                 .password("password")
                 .email("email@gmail.com")
                 .confirmPassword("password")
-                .operationType(RevisionMetadata.RevisionType.INSERT)
-                .revisionNumber(1)
                 .build();
 
 
@@ -97,16 +95,12 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(userDto.getId()))
-                .andExpect(jsonPath("$.password").value(userDto.getPassword()))
-                .andExpect(jsonPath("$.email").value(userDto.getEmail()))
-                .andExpect(jsonPath("$.confirmPassword").value(userDto.getConfirmPassword()))
-                .andExpect(jsonPath("$.operationType").value(userDto.getOperationType()))
-                .andExpect(jsonPath("$.revisionNumber").value(userDto.getRevisionNumber()));
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.password").doesNotExist())
+                .andExpect(jsonPath("$.email").value(userDto.getEmail()));
     }
 
     @Test
-    @Transactional
     @WithMockUser(roles = "ADMIN")
     void shouldUpdateUser() throws Exception {
 
@@ -126,8 +120,6 @@ public class UserControllerTest {
                 .password("password1")
                 .email("email1@gmail.com")
                 .confirmPassword("password1")
-                .operationType(RevisionMetadata.RevisionType.INSERT)
-                .revisionNumber(1)
                 .build();
 
 
@@ -135,16 +127,12 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(userDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(userDto.getId()))
-                .andExpect(jsonPath("$.password").value(userDto.getPassword()))
-                .andExpect(jsonPath("$.email").value(userDto.getEmail()))
-                .andExpect(jsonPath("$.confirmPassword").value(userDto.getConfirmPassword()))
-                .andExpect(jsonPath("$.operationType").value(userDto.getOperationType()))
-                .andExpect(jsonPath("$.revisionNumber").value(userDto.getRevisionNumber()));
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.password").doesNotExist())
+                .andExpect(jsonPath("$.email").value(userDto.getEmail()));
     }
 
     @Test
-    @Transactional
     @WithMockUser(roles = "ADMIN")
     void shouldPageUser() throws Exception {
 
@@ -168,14 +156,13 @@ public class UserControllerTest {
 
 
         mockMvc.perform(get("/api/users")
-                .queryParam("page", "1")
+                .queryParam("page", "0")
                 .queryParam("size", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(2));
     }
 
     @Test
-    @Transactional
     @WithMockUser(roles = "ADMIN")
     void shouldDeleteUser() throws Exception {
 

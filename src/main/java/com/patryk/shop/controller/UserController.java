@@ -52,7 +52,7 @@ public class UserController {
             @SecurityRequirement(name = "bearer-key")
     })
     @PreAuthorize("hasRole('ADMIN')")
-    public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Long id) {
+    public UserDto updateUser(@RequestBody @Valid UserDto userDto, @PathVariable Long id) {
         return userMapper.userDaoToUserDto(userService.update(userMapper.userDtoToUser(userDto), id));
     }
 
