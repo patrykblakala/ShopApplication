@@ -18,6 +18,7 @@ public class ProductDto extends AuditableDto {
     private String name;
     private Double price;
     private Integer quantity;
+    private String filePath;
     private Integer revisionNumber;
     private RevisionMetadata.RevisionType operationType;
 

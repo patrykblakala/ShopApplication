@@ -3,3 +3,5 @@ spring:
     url: jdbc:h2:mem:testdb
   flyway:
     enabled: false
+file:
+  products-path: target

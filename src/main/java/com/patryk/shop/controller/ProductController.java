@@ -38,7 +38,7 @@ public class ProductController {
             @SecurityRequirement(name = "bearer-key")
     })
     public ProductDto saveProduct(@RequestPart ProductDto productDto, @RequestPart @Valid @ExtensionValid MultipartFile file) {
-        return productMapper.productDaoToProductDto(productService.save(productMapper.productDtoToProduct(productDto)));
+        return productMapper.productDaoToProductDto(productService.save(productMapper.productDtoToProduct(productDto), file));
     }
 
     @PutMapping("/{id}")
@@ -47,8 +47,8 @@ public class ProductController {
             @SecurityRequirement(name = "BasicAuth"),
             @SecurityRequirement(name = "bearer-key")
     })
-    public ProductDto updateProduct(@RequestBody ProductDto productDto, @PathVariable Long id) {
-        return productMapper.productDaoToProductDto(productService.update(productMapper.productDtoToProduct(productDto), id));
+    public ProductDto updateProduct(@RequestPart ProductDto productDto, @RequestPart @Valid @ExtensionValid MultipartFile file, @PathVariable Long id) {
+        return productMapper.productDaoToProductDto(productService.update(productMapper.productDtoToProduct(productDto), file, id));
     }
 
     @DeleteMapping("/{id}")

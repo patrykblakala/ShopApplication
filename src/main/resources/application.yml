@@ -10,3 +10,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+file:
+  products-path: C:\Users\Nutzer\Desktop\ShopApplicationFilePath

@@ -32,6 +32,8 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
 
     private Integer quantity;
 
+    private String filePath;
+
     @Override
     public int getFactoryId() {
         return 1;
@@ -47,6 +49,8 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
         out.writeLong(id);
         out.writeString(name);
         out.writeDouble(price);
+        out.writeInt(quantity);
+        out.writeString(filePath);
 
 
     }
@@ -58,6 +62,8 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
         id = in.readLong();
         name = in.readString();
         price = in.readDouble();
+        quantity = in.readInt();
+        filePath = in.readString();
 
     }
 }
