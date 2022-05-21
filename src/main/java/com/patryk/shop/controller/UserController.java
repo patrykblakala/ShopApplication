@@ -58,9 +58,10 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addUser(@RequestBody @Valid UserDto userDto) {
-        return userMapper.userDaoToUserDto(userService.save(userMapper.userDtoToUser(userDto)));
+    public UserDto registerUser(@RequestBody @Valid UserDto userDto) {
+        return userMapper.userDaoToUserDto(userService.register(userMapper.userDtoToUser(userDto)));
     }
+
 
     @DeleteMapping("/{id}")
     @Operation(security = {

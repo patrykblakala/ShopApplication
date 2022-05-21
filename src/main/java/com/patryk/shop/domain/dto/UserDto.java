@@ -25,6 +25,8 @@ public class UserDto extends AuditableDto{
     @NotBlank
     @Email
     private String email;
+    private String firstName;
+    private String lastName;
     @NotBlank
     private String password;
     @NotBlank

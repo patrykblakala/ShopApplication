@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,6 +25,9 @@ public class User extends Auditable {
     @GeneratedValue
     private Long id;
     private String email;
+    private String firstName;
+    private String lastName;
+    @NotAudited
     private String password;
     private LocalDateTime lastLoggedDate;
     @ManyToMany

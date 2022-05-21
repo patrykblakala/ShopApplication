@@ -5,6 +5,7 @@ import com.patryk.shop.exception.QuantityExceededException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,8 +38,13 @@ public class AdviceController {
         return e.getBindingResult().getAllErrors()
                 .stream()
                 .map(objectError -> {
-                    FieldError fieldError = (FieldError) objectError;
-                    return new FieldErrorDto(fieldError.getField(), fieldError.getDefaultMessage());
+                    if(objectError instanceof FieldError) {
+                        FieldError fieldError = (FieldError) objectError;
+                        return new FieldErrorDto(fieldError.getField(), fieldError.getDefaultMessage());
+                    }
+                    return new FieldErrorDto(objectError.getDefaultMessage());
+
+
                 })
                 .collect(Collectors.toList());
     }
@@ -52,6 +58,12 @@ public class AdviceController {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
+        log.error(e.getMessage(), e);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public void handleEmptyResultDataAccessException(BadCredentialsException e) {
         log.error(e.getMessage(), e);
     }
 }

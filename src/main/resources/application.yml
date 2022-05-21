@@ -10,5 +10,21 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: patrykblakala108java@gmail.com
+    password: sitarama108@
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+#          auth: true
+          ssl:
+            trust: smtp.gmail.com
+#        transport:
+#          protocol: smtp
 file:
   products-path: C:\Users\Nutzer\Desktop\ShopApplicationFilePath

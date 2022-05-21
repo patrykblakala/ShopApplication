@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PasswordValid {
-    String message() default "";
+    String message() default "Password does not match our records";
 
     Class<?>[] groups() default {};
 

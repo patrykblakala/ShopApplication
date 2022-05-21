@@ -4,6 +4,8 @@ import com.patryk.shop.domain.dao.Product;
 import com.patryk.shop.flyweight.strategy.generator.StrategyGenerator;
 import com.patryk.shop.generator.domain.FileType;
 import com.patryk.shop.repository.ProductRepository;
+import com.patryk.shop.security.SecurityUtils;
+import com.patryk.shop.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -21,6 +24,8 @@ import java.util.List;
 public class GeneratorXls implements StrategyGenerator {
 
     private final ProductRepository productRepository;
+
+    private final MailService mailService;
 
     @Override
     public byte[] generateFile() {
@@ -44,6 +49,8 @@ public class GeneratorXls implements StrategyGenerator {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
             hssfWorkbook.write(byteArrayOutputStream);
+            String currentUserEmail = SecurityUtils.getCurrentUserEmail();
+            mailService.send(currentUserEmail, "XlsEmailTemplate", Collections.emptyMap(),byteArrayOutputStream.toByteArray(), "Report");
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
             log.error(e.getMessage(), e);

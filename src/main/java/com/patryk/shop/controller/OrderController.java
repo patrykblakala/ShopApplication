@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ public class OrderController {
             @SecurityRequirement(name = "BasicAuth"),
             @SecurityRequirement(name = "bearer-key")
     })
-    public OrderDto getOrderByOrderNumber(String orderNumber) {
+    public OrderDto getOrderByOrderNumber(@PathVariable String orderNumber) {
         return orderMapper.orderToOrderDtos(orderService.getByOrderNumber(orderNumber));
     }
 

@@ -6,17 +6,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Lob;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FieldErrorDto {
+public class TemplateDto {
+
+    private Long id;
+
+    private String subject;
+
+    @Lob
+    private String body;
 
     private String name;
-    private String message;
 
-    public FieldErrorDto(String message) {
-        this.message = message;
-    }
 }

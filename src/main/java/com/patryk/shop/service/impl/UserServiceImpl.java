@@ -3,6 +3,7 @@ package com.patryk.shop.service.impl;
 import com.patryk.shop.domain.dao.User;
 import com.patryk.shop.repository.RoleRepository;
 import com.patryk.shop.repository.UserRepository;
+import com.patryk.shop.service.MailService;
 import com.patryk.shop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +24,24 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
+
+    @Override
+    public User register(User user) {
+        var optionalRole = roleRepository.findByName("ROLE_USER");
+        optionalRole.ifPresent(role -> user.setRoles(Collections.singleton(role)));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("user", user);
+        variables.put("url", "http://localhost:5000/api/templates/4");
+        mailService.send(user.getEmail(), "User Registration confirmation", variables, null, null);
+        return user;
+
+    }
 
     @Override
     public User save(User user) {
-        var optionalRole = roleRepository.findByName("ROLE_USER");
-        optionalRole.ifPresent(role -> user.setRoles(Collections.singleton(optionalRole.get())));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
