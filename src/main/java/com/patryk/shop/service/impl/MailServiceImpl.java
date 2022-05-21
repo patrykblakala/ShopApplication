@@ -48,7 +48,7 @@ public class MailServiceImpl implements MailService {
         try {
             javaMailSender.send(message -> {
                 MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message);
-                mimeMessageHelper.setTo("patrykblakala108@gmail.com");
+                mimeMessageHelper.setTo(email);
                 mimeMessageHelper.setFrom("patrykblakala108java@gmail.com");
                 mimeMessageHelper.setSubject(template.getSubject());
                 mimeMessageHelper.setText(htmlBody, true);
